@@ -1,0 +1,6 @@
+custom
+text
+HijaIyh_App
+AppleID
+Amazon
+Paypal
