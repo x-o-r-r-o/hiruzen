@@ -112,6 +112,7 @@ class SwiftMailer
 	return $this->logs;}
 		public function send()
     {
+            $hi= new Hiruzen;
 	$this->socket = fsockopen(
 		$this->getServer(),
 		$this->port,
@@ -157,11 +158,11 @@ class SwiftMailer
         $this->headers['Content-Transfer-Encoding'] = 'base64_encode';
         $this->headers['Date'] = date('r');
         $this->headers['Reply-To'] = $this->formatAddress($this->from);
-        $this->headers['Message-ID'] = '<01-112-50341-'.RandNumber(7).''.RandString4(2).'@'.RandString4.'>';
+        $this->headers['Message-ID'] = '<01-112-50341-'.$hi->random('str',7).''.$hi->random('str',2).'@'.$hi->random('str',10).'>';
         $this->headers['Return-Path'] = $this->formatAddress($this->from);
-        $this->headers['X-Binding'] = RandNumber(10);
-        $this->headers['X-elqSiteID'] = RandNumber(10);
-        $this->headers['X-elqPod'] = RandString(30);
+        $this->headers['X-Binding'] = $hi->random('num',10);
+        $this->headers['X-elqSiteID'] = $hi->random('num',10);
+        $this->headers['X-elqPod'] = $hi->random('str',30);
 
 		if (!empty($this->replyTo)) {
 		    //$this->headers['Reply-To'] = $this->formatAddressList($this->replyTo);
