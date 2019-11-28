@@ -83,8 +83,9 @@ $sendmail = array_slice($mailist, 0, $many);
     {
         $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
         foreach($sendmail as $trgt) {
-        $mail->addBcc($trgt);
+        $mail->addBcc($trgt,$trgt);
         }
+        
     }elseif($hi->parse_hijaiyh('sender','type') == 'cc')
     {
         $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);

@@ -207,7 +207,7 @@ Class Hiruzen{
     public function updateList($n)
     {
         $listfile = dirname(__DIR__).'/list/'.$this->parse_hijaiyh('sender','list');
-        $text = implode("\n", array_slice(explode("\n", $listfile), $n));
+        $text = implode("\n", array_slice(explode("\n", file_get_contents($listfile)), $n));
         $myfile = fopen($listfile, "w");
         fwrite($myfile, $text);
         fclose($myfile);
