@@ -20,9 +20,16 @@ if($gen == 'y')
     $hi->tanya('Press [ENTER] if you was uploaded .csv file ...');
 }
 
-$mailist = $hi->getList();
+if($hi->parse_hijaiyh('hiruzen','backup_list') == 'yes')
+{
+    $file = __DIR__.'/HijaIyh_App/list/'.$hi->parse_hijaiyh('sender','list');
+    $copy = __DIR__.'/HijaIyh_App/list/backup-'.$hi->parse_hijaiyh('sender','list');
+    @copy($file,$copy);
+}
+
 $n=1;
 do{
+$mailist = $hi->getList();
     /** smtp rotation users **/
     $users = explode("\n",str_replace("\r","",file_get_contents(__DIR__.'/hijaiyh_userlist.txt')));
     $rotate = file_get_contents(__DIR__.'/HijaIyh_App/config/rotation.txt');
@@ -39,6 +46,7 @@ do{
     /** end **/
     
   
+    $hi->loading(count($mailist),substr($smtpuser,0,10).'..');
     
     $mail = new SwiftMailer($hi->parse_hijaiyh('smtp','hostname'),$hi->parse_hijaiyh('smtp','port'));
     if($hi->parse_hijaiyh('smtp','secure') == 'SSL'){
@@ -49,8 +57,8 @@ do{
     
     $mail->setLogin($smtpuser,$hi->parse_hijaiyh('smtp','password'));
     
-    $mail->setFrom($hi->parse_hijaiyh('sender','from_mail'),$hi->parse_hijaiyh('sender','from_name'));
-    $mail->setSubject($hi->parse_hijaiyh('sender','subject'));
+    $mail->setFrom($hi->replace($hi->parse_hijaiyh('sender','from_mail')),$hi->replace($hi->parse_hijaiyh('sender','from_name')));
+    $mail->setSubject($hi->replace($hi->parse_hijaiyh('sender','subject')));
     
     
       /** letter & message **/
@@ -70,15 +78,15 @@ do{
     /** type send **/
     if($hi->parse_hijaiyh('sender','type') == 'bcc')
     {
-        $mail->addTo($hi->parse_hijaiyh('sender','add_to'), null);
+        $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
         foreach($mailist as $trgt) {
         $mail->addBcc($trgt);
         }
     }elseif($hi->parse_hijaiyh('sender','type') == 'cc')
     {
-        $mail->addTo($hi->parse_hijaiyh('sender','add_to'), null);
+        $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
         foreach($mailist as $cc) {
-            $mail->addBcc($cc);
+            $mail->addCc($cc);
         }
     }elseif($hi->parse_hijaiyh('sender','type') == 'to')
     {
@@ -87,11 +95,11 @@ do{
          }
     }
     /** end **/
-    
+   // $mail->getResponse();
     if($mail->send())
     {
         $hi->sendstatus($many,true);
-        $hi->updateList();
+        $hi->updateList($many);
         $hi->rotation();
     }else{
            $error = $mail->getLogs();

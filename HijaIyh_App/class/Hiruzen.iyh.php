@@ -182,18 +182,21 @@ Class Hiruzen{
     }
     public function runlineII()
 	{
-		$kata = array(' ','S','E','N','D','I','N','G',' ');
+		$kata = array(' ','S',' ','E',' ','N',' ','D',' ','I',' ','N',' ','G','  ');
 		foreach($kata as $load)
 		{
 			echo $load;
 			usleep(60000);
 		}
 	}
+    public function loading($max,$smtp)
+    {
+        	$date = date('H:i:s');
+		echo "[Hiruzen][$date][$max][$smtp] ";
+		$this->runlineII();
+    }
     public function sendstatus($max,$success=true)
 	{
-		$date = date('H:i:s');
-		echo "[Hiruzen][$date][$max]";
-		$this->runlineII();
         if($success == true){
 		echo "SUCCESS \n";
         }else{
