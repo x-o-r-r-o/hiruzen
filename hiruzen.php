@@ -30,6 +30,9 @@ if($hi->parse_hijaiyh('hiruzen','backup_list') == 'yes')
 $n=1;
 do{
 $mailist = $hi->getList();
+if($many >= count($mailist)){ $many = count($mailist);}
+$sendmail = array_slice($mailist, 0, $many);
+    
     /** smtp rotation users **/
     $users = explode("\n",str_replace("\r","",file_get_contents(__DIR__.'/hijaiyh_userlist.txt')));
     $rotate = file_get_contents(__DIR__.'/HijaIyh_App/config/rotation.txt');
@@ -79,18 +82,18 @@ $mailist = $hi->getList();
     if($hi->parse_hijaiyh('sender','type') == 'bcc')
     {
         $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
-        foreach($mailist as $trgt) {
+        foreach($sendmail as $trgt) {
         $mail->addBcc($trgt);
         }
     }elseif($hi->parse_hijaiyh('sender','type') == 'cc')
     {
         $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
-        foreach($mailist as $cc) {
+        foreach($sendmail as $cc) {
             $mail->addCc($cc);
         }
     }elseif($hi->parse_hijaiyh('sender','type') == 'to')
     {
-         foreach($mailist as $to) {
+         foreach($sendmail as $to) {
         $mail->addTo($to, null);
          }
     }
