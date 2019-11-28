@@ -41,7 +41,7 @@ $sendmail = array_slice($mailist, 0, $many);
         $isi = @file_get_contents($file);
         $hi->save($file,0,'w');
     }
-    if($hi->parse_hijaiyh('smtp','use_smtp_generate') =='yes'){
+    if($hi->parse_hijaiyh('smtp','use_user_generate') =='yes'){
     $smtpuser = $users[$rotate];
     }else{
     $smtpuser = $hi->parse_hijaiyh('smtp','username');
@@ -81,9 +81,10 @@ $sendmail = array_slice($mailist, 0, $many);
     /** type send **/
     if($hi->parse_hijaiyh('sender','type') == 'bcc')
     {
-        $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
+       
         foreach($sendmail as $trgt) {
-        $mail->addBcc($trgt,$trgt);
+        $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
+        $mail->addBcc($trgt);
         }
         
     }elseif($hi->parse_hijaiyh('sender','type') == 'cc')
@@ -103,10 +104,22 @@ $sendmail = array_slice($mailist, 0, $many);
     if($mail->send())
     {
         $hi->sendstatus($many,true);
+        if($double == 'y')
+        {
+        $mail->addTo($hi->replace($hi->parse_hijaiyh('sender','add_to')), null);
+        foreach($sendmail as $trgt) {
+        $mail->addBcc($trgt);
+        }
+             if($mail->send())
+        {
+            echo " : DOUBLE SEND SUCCESS";
+        }
+        }
+        echo "\n";
         $hi->updateList($many);
         $hi->rotation();
     }else{
-           $error = $mail->getLogs();
+           $error = json_encode($mail->getLogs());
        
         $hi->save('hiruzen_error_log.txt',$error,'w');
         $hi->sendstatus($many,false);

@@ -198,7 +198,7 @@ Class Hiruzen{
     public function sendstatus($max,$success=true)
 	{
         if($success == true){
-		echo "SUCCESS \n";
+		echo "SUCCESS ";
         }else{
         echo "ERROR : CHECK ERROR LOG => hiruzen_error_log.txt \n";
             exit;
